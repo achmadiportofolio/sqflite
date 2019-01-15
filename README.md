@@ -15,7 +15,7 @@ In your flutter project add the dependency:
 ```yml
 dependencies:
   ...
-  sqflite: any
+  sqflite: ^1.0.0
 ```
 
 For help getting started with Flutter, view the online
@@ -167,6 +167,33 @@ create table $tableTodo (
 
   Future close() async => db.close();
 }
+```
+
+### Read results
+
+Assuming the following read results:
+
+```dart
+List<Map<String, dynamic>> records = await db.query('my_table');
+```
+
+Resulting map items are read-only
+
+```dart
+// get the first record
+Map<String, dynamic> mapRead = records.first;
+// Update it in memory...this will throw an exception
+mapRead['my_column'] = 1;
+// Crash... `mapRead` is read-only
+```
+
+You need to create a new map if you want to modify it in memory:
+
+```dart
+// get the first record
+Map<String, dynamic> map = Map<String, dynamic>.from(mapRead);
+// Update it in memory now
+map['my_column'] = 1;
 ```
 
 ### Transaction
